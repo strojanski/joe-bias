@@ -34,7 +34,9 @@ button {
     border-radius: 5px;
     border: none;
     margin-bottom: 10px;
-    width: 300px;
+    width: 350px;
+    height: 80px;
+    font-size: 30px;
     background-color: rgba(255, 255, 255, 0.5);
     color: #333;
     font-weight: bold;
@@ -44,7 +46,7 @@ button {
 }
 
 button:hover {
-    background-color: #3e8e41;
+    background-color: #8c0c13;
 }
 
 .proceed {
@@ -52,6 +54,7 @@ button:hover {
     bottom: 0;
     left: 0;
     margin-left: 2rem;
+    margin-bottom: 2rem;
 
 }
 
