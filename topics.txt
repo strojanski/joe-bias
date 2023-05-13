@@ -1,0 +1,13 @@
+topic,leftist,rightist
+
+abortion,+,-
+economy,equality,free_market
+education,free,private
+gay,+,-
+guns,-,+
+healthcare,+,-
+immigration,+,-
+military,-,+
+regulation,+,-
+taxes,unequal,equal
+worker_rights,+,-
