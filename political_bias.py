@@ -25,14 +25,14 @@ class ArticleRequest:
         return self.res.json()["totalResults"]
     
     def get_articles (self):
-        return self.res.json()["articles"]
+        return requests.get(self.url).json()["articles"]
 
     def set_url(self, url):
         self.url = url
     
     
     def parse_articles(self):
-        list = []
+        # list = []
         for article in self.get_articles():
             data = {}
             data.update({'media_id' : article["source"]['id']})
@@ -42,9 +42,9 @@ class ArticleRequest:
             data.update({'url' : article["url"]})
             data.update({'date' : article["publishedAt"]})
             data.update({'desc' : article["description"]})
-            list.append(data)
-        self.articles.append(list)
-        return list
+            self.articles.append(data)
+            # list.append(data)
+        return self.articles
 
 def preprocess_text(text):
     '''
@@ -111,57 +111,59 @@ if __name__ == "__main__":
     domains = concat_domains(medii)
 
     relavant_url = relavant_urls(None, 1, domains, 1)
-    # create relavant articles  articles 
+    # create relavant articles articles - get first page
     relavant_articles = ArticleRequest(relavant_url)
-    page_index = 1
+
+    # iterate through pages of articles and get all of them 
+    page_index = 0
     while (page_index) * 100 < relavant_articles.get_number_of_articles():
         page_index += 1
-        print(page_index)
         relavant_url = relavant_urls(None, 1, domains, page_index)
-        
+        relavant_articles.set_url(relavant_url)
+        relavant_articles.parse_articles()
 
+    # request for all the media sources
+    for article in relavant_articles.articles:
+        print(article["url"])
+        if (article["media_name"] == "The Washington Post"):
+            article_response = requests.get(article["url"])
+            if article_response.ok:
+                soup = BeautifulSoup(article_response.text, "html.parser")
+                content = str(soup.find(class_="grid-body"))
+                print("The content is : " + " ".join(extract_content_from_html(content[content.find('drop-cap-letter') + 28:]).split()))
 
-    # pages = relavant_articles.get_number_of_articles()
-    # for page in range(int(pages / 100) + 1):
+        elif (article["media_name"] == "CNN"):
+            article_response = requests.get(article["url"])
+            if article_response.ok:
+                soup = BeautifulSoup(article_response.text, "html.parser")
+                content = str(soup.find(class_="article__content"))
+                print("The content is : " + " ".join(extract_content_from_html(content).split()))
 
-    # for article in relavant_articles.articles:
-    #     print(article["media_name"])
-        # if (article["media_name"] == "The Washington Post"):
-        #     article_response = requests.get(article["url"])
-        #     if article_response.ok:
-        #         soup = BeautifulSoup(article_response.text, "html.parser")
-        #         content = str(soup.find(class_="grid-body"))
-        #         print("The content is : " + " ".join(extract_content_from_html(content[content.find('drop-cap-letter') + 28:]).split()))
-
-        # elif (article["media_name"] == "CNN"):
-        #     article_response = requests.get(article["url"])
-        #     if article_response.ok:
-        #         soup = BeautifulSoup(article_response.text, "html.parser")
-        #         content = str(soup.find(class_="article__content"))
-        #         print("The content is : " + " ".join(extract_content_from_html(content).split()))
-
-        # elif (article["media_name"] == "CBS News"):
-        #     print(article["url"])
-        #     article_response = requests.get(article["url"])
-        #     if article_response.ok:
-        #         soup = BeautifulSoup(article_response.text, "html.parser")
-        #         content = str(soup.find(class_="content__body"))
-        #         print("The content is : " + " ".join(extract_content_from_html(content[:content.find('chartbeat') - 25]).split()))
+        elif (article["media_name"] == "CBS News"):
+            article_response = requests.get(article["url"])
+            if article_response.ok:
+                soup = BeautifulSoup(article_response.text, "html.parser")
+                content = str(soup.find(class_="content__body"))
+                print("The content is : " + " ".join(extract_content_from_html(content[:content.find('chartbeat') - 25]).split()))
 
         # todo: check media_name on cnbs, msnbc, fox
-        # elif (article["media_name"] == "CNBS"):
-        #     article_response = requests.get(article["url"])
-        #     if reponse.ok:
-        #         soup = BeautifulSoup(reponse.text, "html.parser")
-        #         content = str(soup.find(class_="ArticleBody-articleBody"))
-        #         print("The content is : " + " ".join(extract_content_from_html(content[content.find('group') + 10:]).split()))
+        elif (article["media_name"] == "CNBC"):
+            article_response = requests.get(article["url"])
+            if article_response.ok:
+                soup = BeautifulSoup(article_response.text, "html.parser")
+                content = str(soup.find(class_="ArticleBody-articleBody"))
+                print("The content is : " + " ".join(extract_content_from_html(content[content.find('group') + 10:]).split()))
 
-        # elif (article["media_name"] == "fox"):
-        #         if reponse.ok:
-        #             soup = BeautifulSoup(reponse.text, "html.parser")
-        #             content = str(soup.find(class_="article-body"))
-        #             print("The content is : " + " ".join(extract_content_from_html(content[content.find('speakable') + 11:]).split()))
+        elif (article["media_name"] == "fox"):
+            article_response = requests.get(article["url"])
+            if article_response.ok:
+                soup = BeautifulSoup(article_response.text, "html.parser")
+                content = str(soup.find(class_="article-body"))
+                print("The content is : " + " ".join(extract_content_from_html(content[content.find('speakable') + 11:]).split()))
+        elif (article["media_name"] == "MSNBC"):
 
-
-
-
+            article_response = requests.get(article["url"])
+            if article_response.ok:
+                soup = BeautifulSoup(article_response.text, "html.parser")
+                content = str(soup.find(class_="showblog-body__content"))
+                print("The content is : " + " ".join(extract_content_from_html(content).split()))
