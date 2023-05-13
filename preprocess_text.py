@@ -13,7 +13,7 @@ def preprocess_text(text):
     tokens = re.sub(r'[^\w\s]', '', " ".join(tokens))
     tokens = tokens.split(" ")
     stop_words = stopwords.words('english')
-    tokens = [token.lower() for token in tokens if token.lower() not in stop_words and len(token) > 0]
+    tokens = [token.lower() for token in tokens if token.lower() not in stop_words and len(token) > 0 and token != " "]
 
     # Lemmatize tokens
     lemmatizer = WordNetLemmatizer()
