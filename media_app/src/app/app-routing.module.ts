@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LandingComponent } from './landing/landing.component';
-import { ListMediaComponent } from './list-media/list-media.component';
+import { LandingComponent } from './components/landing/landing.component';
+import { ListMediaComponent } from './components/list-media/list-media.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/index', pathMatch: 'full' },

@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="list">
+        <ng-container>
+            <table>
+                <tr class="article-list" style="width:fit-content; vertical-align: top;" (click)="pickArticle(article)" *ngFor="let article of articles.articles">
+                    <td>
+                            <div class="article-title">{{article | title}}</div>
+                            <div class="article-time">{{article.time}}</div>
+                    </td>
+                    <td>
+                        <div class="article-publisher">{{article.publisher}}</div>
+                    </td>
+                </tr>
+            </table>
+        </ng-container>
+    </div>
+
+    <div class="details">
+        <ng-container>
+            <app-article-details [article]="selectedArticle"></app-article-details>
+        </ng-container>
+    </div>
+</div>
