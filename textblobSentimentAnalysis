@@ -1,0 +1,6 @@
+from textblob import TextBlob
+from textblob.sentiments import NaiveBayesAnalyzer, PatternAnalyzer
+f = open("sample_article.txt", "r").read()
+blob = TextBlob(f, analyzer=PatternAnalyzer())
+print(blob.sentiment.polarity)
+print(blob.sentiment.subjectivity)
