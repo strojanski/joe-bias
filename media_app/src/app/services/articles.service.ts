@@ -40,17 +40,17 @@ export class ArticlesService {
    * Returns a list of Article objects representing the most trending articles
    */
   async getTitles() {
-    fetch(`${this.API_URL}/titles`).then((response) => {
+    return fetch(`${this.API_URL}/titles`).then((response) => {
       return response.json();
-    });
-  }
+    }
+  )}
 
 
   /**
    * Returns an article object representing the article with the given title, also has content field
    */
-  async getArticle(title: string): Promise<any> {
-    fetch(`${this.API_URL}/article/${title}`).then((response) => {
+  async getArticle(title: string) {
+    return fetch(`${this.API_URL}/article/${title}`).then((response) => {
       return response.json();
     });
   }
@@ -59,7 +59,7 @@ export class ArticlesService {
    * Returns bias of a given article
    */
   async getBias(title: string): Promise<any> {
-    fetch(`${this.API_URL}/bias/${title}`).then((response) => {
+    return fetch(`${this.API_URL}/bias/${title}`).then((response) => {
       return response.json();
     });
   }
