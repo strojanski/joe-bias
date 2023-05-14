@@ -8,7 +8,6 @@ export class ArticlesService {
 
   // Array of articles
   public articles: Article[] = []
-
   private API_URL = 'http://localhost:5000';
 
   constructor() {
@@ -45,7 +44,6 @@ export class ArticlesService {
     }
     )
   }
-
 
   /**
    * Returns an object representing the article content with the given title, also has content field
