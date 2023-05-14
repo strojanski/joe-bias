@@ -139,33 +139,32 @@ def get_article_content(article_url, article_media_name):
             return(" ".join(extract_content_from_html(content).split()))
 
 def get_articles_top():
-    domains = [
-        "cnn.com",
-        "cnbc.com",
-        "cbsnews.com",
-        "msnbc.com",
-        "foxnews.com",
-        "washingtonpost.com"
-    ]
     country = "us"
-    top_articles_url = f"https://newsapi.org/v2/top-headlines?domains={domains}&country={country}&apiKey={api_key}"
+    date = datetime.now().date()
+    start_day = date - timedelta(days=2)
+    domains = concat_domains(medii)
+    top_articles_url = f"https://newsapi.org/v2/everything?domains={domains}&from={start_day}&to={date}&apiKey={api_key}"
+    #top_articles_url = f"https://newsapi.org/v2/everything?domains={domains}&from={start_day}&to={date}&page={1}&apiKey={api_key}"
+
     # create top heading articles
     top_articles = ArticleRequest(top_articles_url)
     # parse the articles
     top_articles_parsed = top_articles.parse_articles()
     return top_articles
 
-def get_articles_relevant(publisher=None):
-
-     # construct url for relavant data
-    medii = [
+medii = [
         "cnn.com",
         "cnbc.com",
         "cbsnews.com",
         "msnbc.com",
         "foxnews.com",
         "washingtonpost.com"
-    ]
+]
+
+def get_articles_relevant(publisher=None):
+
+     # construct url for relavant data
+    
     domains = concat_domains(medii)
     if publisher != None:
         medii.remove(publisher)

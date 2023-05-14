@@ -106,7 +106,7 @@ class BindArticle:
 
 if __name__ == "__main__": 
 
-    article = get_articles_top().articles[0]
+    article = get_articles_top().articles[1]
     print(article)
     
     article_description = preprocess_text(article["desc"])
