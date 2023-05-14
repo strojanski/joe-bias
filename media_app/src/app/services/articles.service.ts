@@ -63,10 +63,22 @@ export class ArticlesService {
   /**
    * Returns bias of a given article
    */
-  async getBias(title: string): Promise<any> {
-    const response = await fetch(`${this.API_URL}/bias/${title}`)
-    const data = await response.json();
-    return data.bias;
+  async getBias(article: string): Promise<any> {
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(article)
+    };
+
+
+    const response = await fetch(`${this.API_URL}/bias/`, requestOptions)
+    return await response.json()
+
+  }
+  
+  stringifyArticle(article: any) {
+    return JSON.stringify(article);
   }
 
   async getSimilar(article: any): Promise<any> {

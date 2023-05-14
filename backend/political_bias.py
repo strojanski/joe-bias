@@ -11,7 +11,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 
-api_key = "c2586029ead24a24996f24a9e4bf7bf3"
+api_key = "5377f7ea28354f08a9ed7a584c086622"
 
 
 class ArticleRequest:

@@ -125,8 +125,7 @@ if __name__ == "__main__":
     article = res[1]
     while("espan" in article["url"] or "arabic" in article["url"]):
         article = res[np.random.randint(0, len(res))]
-    print(article)
-    
+
     article_description = preprocess_text(article["desc"])
     article_title = preprocess_text(article["title"])
     article_author = article["media_id"]
@@ -134,5 +133,4 @@ if __name__ == "__main__":
     ba.get_same_date_articles()
     res = ba.get_similar_articles()
 
-    print(res)
-    print(res.keys())
+ 

@@ -1,41 +1,61 @@
-<div class="row">
+<div class="row bg-img" [ngStyle]="{'background-image': '../../../assets/' + bgimg}">
     <div class="column" style="background-color:rgb(223, 227, 240);">
-        <h2 style="text-align: center;">Najbolj ažurne novice</h2>
+        <h2 style="text-align: center;">Most recent news</h2>
 
-        <div class="deck" *ngFor="let article of allArticles; index as i">
-            <div class="row justify-content-evenly" *ngFor="let number of [1, 2]">
+        <div class="deck" *ngFor="let item of combinedArray" >
+            <div class="row justify-content-evenly" *ngIf="isAlpha(item.title)">
                 <div class="col-6">
                     <mat-card class="example-card">
-                        <mat-card-header (click)="displayDetails(article)">
-                            <mat-card-title>{{article.title}}</mat-card-title>
+                        <mat-card-header (click)="displayDetails(item.element1)">
+                            <mat-card-title>{{item.element1.title}}</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>{{article.desc}}</p>
+                            <p>{{item.element1.desc}}</p>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div class="col-6">
+                    <mat-card class="example-card">
+                        <mat-card-header (click)="displayDetails(item.element2)">
+                            <mat-card-title>{{item.element2.title}}</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>{{item.element2.desc}}</p>
                         </mat-card-content>
                     </mat-card>
                 </div>
             </div>
         </div>
     </div>
-        
     
-    <div class="column" style="background-color:rgb(241, 241, 241);">
-        <h2 style="text-align: center;">Analiza in primerjava novic</h2>
+    
+    <div class="column" style="background-color:rgb(241, 241, 241);" [ngStyle]="{'background-color': bg}">
+        <h2 style="text-align: center;">Analyze and compare news</h2>
         <div *ngIf="this.toDisplay">
-            {{this.toDisplay.media_name}}
+            <h1>
+                {{this.toDisplay.media_name}} - {{this.toDisplay.title}}
+            </h1>
         </div>
-        <mat-card class="example-card">
-            <mat-card-header >
-                <mat-card-title>Naslov primerjana</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <p>d</p>
-            </mat-card-content>
-            <mat-card-actions>
-                <button mat-raised-button color="primary">Rate politicaly</button>
-                <button mat-raised-button color="primary">Get raw data</button>
-              </mat-card-actions>
-        </mat-card>
+
+        <div class="row">
+            <mat-card class="compare-card">
+                <mat-card-actions>
+                   
+                    <button style="margin-right: 40px; margin-bottom: 1rem;" mat-raised-button color="primary" (click)=getRating()>Freedom meter</button>
+                    <button mat-raised-button color="primary" hidden="true">Get raw data</button>
+                    <img *ngIf="this.media_name == 'Fox News'" class="media_logo" src="../../../assets/foxnews.png"> 
+                    <img *ngIf="this.media_name == 'CBS News'"class="media_logo" src="../../../assets/cbs.png"> 
+                    <img *ngIf="this.media_name == 'cnbc.com'" class="media_logo" src="../../../assets/cnbc.png"> 
+                    <img *ngIf="this.media_name == 'CNN'"class="media_logo" src="../../../assets/CNN-logo.png"> 
+                    <div *ngIf="this.rating != null" style="font-size: 20px; font-weight: bold">The political rating of this article is: {{this.rating}} (-1 = extreme left and 1 = extreme right)</div>
+                    <div>
+                        <a *ngIf="this.url" href="{{this.url}}" style="cursor: pointer;" target="_blank">Link to article</a>
+                    </div>
+                </mat-card-actions>
+                <mat-card-content>
+                </mat-card-content>
+            </mat-card>
+        </div>
 
     </div>
 </div>  

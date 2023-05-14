@@ -58,8 +58,15 @@ tr {
 .example-card {
   margin-bottom: 5px;
   max-width: 400px;
+  min-height: 200px;
 }
 
 .deck {
   display: table-row;
 }
+
+.media_logo {
+  max-width: 30px;
+  height: auto;
+}
+
