@@ -2,3 +2,5 @@ media_app/.angular
 media_app/node_modules
 backend/__pycache__
 __pycache__
+media_app/node_modules
+media_app/.angular
