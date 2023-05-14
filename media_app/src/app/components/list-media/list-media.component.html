@@ -3,11 +3,11 @@
         <h2 style="text-align: center;">Najbolj ažurne novice</h2>
 
         <mat-card class="example-card" *ngFor="let article of allArticles">
-            <mat-card-header>
-                <mat-card-title>Naslov članka</mat-card-title>
+            <mat-card-header (click)="displayDetails(article)">
+                <mat-card-title>{{article.title}}</mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <p>Tu damo prvih n besed originalnega članka</p>
+                <p>{{article.desc}}</p>
             </mat-card-content>
             
         </mat-card>
@@ -16,20 +16,10 @@
 
     <div class="column" style="background-color:rgb(241, 241, 241);">
         <h2 style="text-align: center;">Analiza in primerjava novic</h2>
-        
-        <mat-card class="example-card" *ngFor="let article of allArticles">
-            <mat-card-header>
-                <mat-card-title>Naslov članka</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <p>Tu damo prvih n besed originalnega članka</p>
-            </mat-card-content>
-            
-            <mat-card-actions>
-                <button mat-raised-button color="primary" (click)="articles.getBias(article.name)">Oceni Članek</button>
-                <button mat-raised-button color="primary">Ovrednoti dejstva</button>
-            </mat-card-actions>
-        </mat-card>
+        <div *ngIf="this.toDisplay">
+            {{this.toDisplay.title}}
+        </div>
+    
 
     </div>
 </div>  
