@@ -11,7 +11,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 
-api_key = "bb5dbc375d1540519dd0b79d4e55c272"
+api_key = "1676df34bfdc46df95f8a4cbd5db5e47"
 
 
 class ArticleRequest:
@@ -91,48 +91,49 @@ def relavant_urls(date, num_of_days, domains, page):
 def extract_content_from_html(html_string):
     soup = BeautifulSoup(html_string, 'html.parser')
     content = soup.get_text()
-    return content   
+    return content
 
 def get_article_content(article_url, article_media_name):
     # request for all the media sources
-        article_url_response = requests.get(article_url)
+    article_url_response = requests.get(article_url)
+    print(article_url_response)
 
-        if (article_media_name == "The Washington Post"):
-            if article_url_response.ok:
-                soup = BeautifulSoup(article_url_response.text, "html.parser")
-                content = str(soup.find(class_="grid-body"))
-                print("The content is : " + " ".join(extract_content_from_html(content[content.find('drop-cap-letter') + 28:]).split()))
+    if (article_media_name == "The Washington Post"):
+        if article_url_response.ok:
+            soup = BeautifulSoup(article_url_response.text, "html.parser")
+            content = str(soup.find(class_="grid-body"))
+            return(" ".join(extract_content_from_html(content[content.find('drop-cap-letter') + 28:]).split()))
 
-        elif (article_media_name == "CNN"):
-            if article_url_response.ok:
-                soup = BeautifulSoup(article_url_response.text, "html.parser")
-                content = str(soup.find(class_="article__content"))
-                print("The content is : " + " ".join(extract_content_from_html(content).split()))
+    elif (article_media_name == "CNN"):
+        if article_url_response.ok:
+            soup = BeautifulSoup(article_url_response.text, "html.parser")
+            content = str(soup.find(class_="article__content"))
+            return(" ".join(extract_content_from_html(content).split()))
 
-        elif (article_media_name == "CBS News"):
-            if article_url_response.ok:
-                soup = BeautifulSoup(article_url_response.text, "html.parser")
-                content = str(soup.find(class_="content__body"))
-                print("The content is : " + " ".join(extract_content_from_html(content[:content.find('chartbeat') - 25]).split()))
+    elif (article_media_name == "CBS News"):
+        if article_url_response.ok:
+            soup = BeautifulSoup(article_url_response.text, "html.parser")
+            content = str(soup.find(class_="content__body"))
+            return(" ".join(extract_content_from_html(content[:content.find('chartbeat') - 25]).split()))
 
-        # todo: check media_name on cnbs, msnbc, fox
-        elif (article_media_name == "CNBC"):
-            if article_url_response.ok:
-                soup = BeautifulSoup(article_url_response.text, "html.parser")
-                content = str(soup.find(class_="ArticleBody-articleBody"))
-                print("The content is : " + " ".join(extract_content_from_html(content[content.find('group') + 10:]).split()))
+    # todo: check media_name on cnbs, msnbc, fox
+    elif (article_media_name == "CNBC"):
+        if article_url_response.ok:
+            soup = BeautifulSoup(article_url_response.text, "html.parser")
+            content = str(soup.find(class_="ArticleBody-articleBody"))
+            return(" ".join(extract_content_from_html(content[content.find('group') + 10:]).split()))
 
-        elif (article_media_name == "fox"):
-            if article_url_response.ok:
-                soup = BeautifulSoup(article_url_response.text, "html.parser")
-                content = str(soup.find(class_="article-body"))
-                print("The content is : " + " ".join(extract_content_from_html(content[content.find('speakable') + 11:]).split()))
+    elif (article_media_name == "fox"):
+        if article_url_response.ok:
+            soup = BeautifulSoup(article_url_response.text, "html.parser")
+            content = str(soup.find(class_="article-body"))
+            return(" ".join(extract_content_from_html(content[content.find('speakable') + 11:]).split()))
 
-        elif (article_media_name == "MSNBC"):
-            if article_url_response.ok:
-                soup = BeautifulSoup(article_url_response.text, "html.parser")
-                content = str(soup.find(class_="showblog-body__content"))
-                print("The content is : " + " ".join(extract_content_from_html(content).split()))
+    elif (article_media_name == "MSNBC"):
+        if article_url_response.ok:
+            soup = BeautifulSoup(article_url_response.text, "html.parser")
+            content = str(soup.find(class_="showblog-body__content"))
+            return(" ".join(extract_content_from_html(content).split()))
 
 def get_articles_top():
     country = "us"
