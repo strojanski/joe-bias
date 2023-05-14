@@ -14,7 +14,9 @@ export class ListMediaComponent implements OnInit {
   constructor(public articles: ArticlesService) { }
 
   async ngOnInit() {
-    this.allArticles = await this.articles.getTitles()
+    this.articles.getTitles().then((res) => {
+      this.allArticles = res.titles;
+    })
   }
 
   public selectedArticle: any = null;
@@ -23,8 +25,9 @@ export class ListMediaComponent implements OnInit {
     this.selectedArticle = article 
   }
 
-  displayDetails(article: any) {
+  async displayDetails(article: any) {
     this.toDisplay = article
+    // this.similarArticles = await 
   }
 
 }

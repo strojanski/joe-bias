@@ -19,6 +19,7 @@ CORS(app, origins='http://localhost:4200')
 
 @app.route("/")
 def get_daily(): 
+    print(get_articles_top().articles)
     return jsonify({"titles": get_articles_top().articles})
 
 @app.route("/by_link/<publisher>/<link>")
@@ -39,6 +40,8 @@ def get_similar_articles(publisher):
     return get_articles_relevant(publisher)
 
     #return(political_bias.get_similar_articles("https://www.cnn.com/2023/05/12/business/airbag-inflator-recall-arc/index.html", "CNN"))
+
+
 
 if __name__ == '__main__':
     app.run()
