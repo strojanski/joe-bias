@@ -47,9 +47,9 @@ export class ArticlesService {
 
 
   /**
-   * Returns an article object representing the article with the given title, also has content field
+   * Returns an object representing the article content with the given title, also has content field
    */
-  async getArticle(title: string) {
+  async getArticleContent(title: string) {
     return fetch(`${this.API_URL}/article/${title}`).then((response) => {
       return response.json();
     });
