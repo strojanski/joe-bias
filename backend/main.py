@@ -1,7 +1,11 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, jsonify
 from political_bias import *
 from bind_articles import *
     
+import json
+from flask_cors import CORS
+
+
 medias = [
     "cnn.com",
     "cnbc.com",
@@ -15,6 +19,7 @@ all_articles = None
 
 
 app = Flask(__name__)
+CORS(app, origins='http://localhost:4200')
 
 @app.route("/")
 def get_daily(): 
