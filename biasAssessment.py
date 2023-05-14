@@ -55,9 +55,9 @@ class BiasAssesment:
         return(biased_freq*weightsMax1)
 
     def subjectivityMulti(self):
-        blob = TextBlob(f, analyzer=PatternAnalyzer())
+        blob = TextBlob(self.article, analyzer=PatternAnalyzer())
         print(blob.sentiment.subjectivity)
-        pass
+        return blob.sentiment.subjectivity
 
     def authorSum(self):
         weightMax3 = 1
@@ -84,7 +84,7 @@ class BiasAssesment:
 
         pass
 
-    def localize_top():
+    def localize_topic():
         pass
 
     def indexCalculating(self):
