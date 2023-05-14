@@ -53,18 +53,23 @@ class BindArticle:
     
     def jaccard_similarity(self, article2):
         # Tokenize the texts into sets of words
-        words1 = set(word_tokenize(self.article))
-        words2 = set(word_tokenize(article2))
+        words1 = set(self.article)
+        words2 = set(article2)
 
         # Compute the Jaccard similarity between the word sets
         similarity = len(words1.intersection(words2)) / len(words1.union(words2))
         return similarity
 
 
+if __name__ == "__main__": 
+    # Define two example texts
+    text1 = "This is the first text."
+    text2 = "This is the second text."
 
-# Define two example texts
-text1 = "This is the first text."
-text2 = "This is the second text."
+    text1 = preprocess_text(text1)
+    text2 = preprocess_text(text2)
 
 
-print(similarity)
+    ba = BindArticle(text1)
+    similarity = ba.jaccard_similarity(text2)
+    print(similarity)
