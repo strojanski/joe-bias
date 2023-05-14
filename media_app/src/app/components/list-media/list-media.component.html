@@ -2,16 +2,19 @@
     <div class="column" style="background-color:rgb(223, 227, 240);">
         <h2 style="text-align: center;">Najbolj ažurne novice</h2>
 
-        <div class="deck">
-        
-            <mat-card class="example-card" *ngFor="let article of allArticles">
-                <mat-card-header (click)="displayDetails(article)">
-                    <mat-card-title>{{article.title}}</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <p>{{article.desc}}</p>
-                </mat-card-content>
-            </mat-card>
+        <div class="deck" *ngFor="let article of allArticles; index as i">
+            <div class="row justify-content-evenly" *ngFor="let number of [1, 2]">
+                <div class="col-6">
+                    <mat-card class="example-card">
+                        <mat-card-header (click)="displayDetails(article)">
+                            <mat-card-title>{{article.title}}</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>{{article.desc}}</p>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
         </div>
     </div>
         
