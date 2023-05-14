@@ -11,7 +11,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 
-api_key = "1676df34bfdc46df95f8a4cbd5db5e47"
+api_key = "53fdc150126b4e348062e2e33c73c33e"
 
 
 class ArticleRequest:
@@ -25,6 +25,7 @@ class ArticleRequest:
         return self.res.json()["totalResults"]
 
     def get_articles(self):
+        print(requests.get(self.url).json())
         return requests.get(self.url).json()["articles"]
 
     def set_url(self, url):
@@ -83,7 +84,8 @@ def relavant_urls(date, num_of_days, domains, page):
     if (date == None):
         date = datetime.now().date()
     start_day = date - timedelta(days=num_of_days)
-
+    print("start_day", start_day)
+    
     relavant = f"https://newsapi.org/v2/everything?domains={domains}&from={start_day}&to={date}&page={page}&apiKey={api_key}"
     return relavant
 
@@ -144,7 +146,7 @@ def get_articles_top():
     top_articles_parsed = top_articles.parse_articles()
     return top_articles
 
-def get_articles_relavant():
+def get_articles_relavant(publisher=None):
 
      # construct url for relavant data
     medii = [
@@ -156,21 +158,26 @@ def get_articles_relavant():
         "washingtonpost.com"
     ]
     domains = concat_domains(medii)
+    if publisher != None:
+        medii.remove(publisher)
 
     past_lookahead = 2 # how many days in history to search for the articles
     relavant_url = relavant_urls(None, past_lookahead, domains, 1)
+    
+    print(relavant_url)
+    
     # create relavant articles articles - get first page
     relavant_articles = ArticleRequest(relavant_url)
     relavant_articles.parse_articles()
 
     # iterate through pages of articles and get all of them
-    page_index = 0
-    while (page_index) * 100 < relavant_articles.get_number_of_articles():
-        page_index += 1
-        relavant_url = relavant_urls(None, past_lookahead, domains, page_index)
-        relavant_articles.set_url(relavant_url)
-        relavant_articles.parse_articles()
-    return relavant_articles
+    page_index = 1
+    #while (page_index) * 100 < relavant_articles.get_number_of_articles():
+    relavant_url = relavant_urls(None, past_lookahead, domains, page_index)
+    relavant_articles.set_url(relavant_url)
+    relavant_articles.parse_articles()
+    page_index += 1
+    return relavant_articles.articles
 
 # example:
 # print(get_articles_relavant().articles[50])
