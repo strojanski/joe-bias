@@ -2,7 +2,7 @@ from political_bias import *
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
-from main.py import all_articles
+from main import all_articles
 
 # TODO: dictionary with key = publisher, value = list of articles
 

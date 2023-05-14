@@ -23,7 +23,7 @@ CORS(app, origins='http://localhost:4200')
 
 @app.route("/")
 def get_daily(): 
-    titles = get_articles_relevant().articles
+    titles = get_articles_relevant()
     all_articles = titles
     return jsonify({"titles": titles})
 
