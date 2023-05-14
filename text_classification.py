@@ -46,11 +46,11 @@ class GPT4:
     def print_response(self, response):
         if response.ok:
             if model == "gpt-3.5-turbo":
-                print(response.json()["choices"][0]["message"]["content"])
+                return response.json()["choices"][0]["message"]["content"].split(" ")[0]
             else:
-                print(response.json())
+                return response.json().split(" ")[0]
         else:
-            print(response)
+            return response.split(" ")[0]
 
 
 def preprocess_text(text):
