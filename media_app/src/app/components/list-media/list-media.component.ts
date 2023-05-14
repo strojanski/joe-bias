@@ -42,7 +42,7 @@ export class ListMediaComponent implements OnInit {
 
   async getRating() {
     console.log(this.toDisplay)
-    this.rating = (await this.articles.getBias(this.toDisplay)).bias * 10
+    this.rating = (await this.articles.getBias(this.toDisplay)).bias * 20;
     console.log(this.rating)
     if (isNaN(this.rating)) {
       this.rating = 0.11123124;
