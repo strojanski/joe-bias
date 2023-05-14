@@ -139,38 +139,37 @@ def get_article_content(article_url, article_media_name):
             return(" ".join(extract_content_from_html(content).split()))
 
 def get_articles_top():
-    domains = [
-        "cnn.com",
-        "cnbc.com",
-        "cbsnews.com",
-        "msnbc.com",
-        "foxnews.com",
-        "washingtonpost.com"
-    ]
     country = "us"
-    top_articles_url = f"https://newsapi.org/v2/top-headlines?domains={domains}&country={country}&apiKey={api_key}"
+    date = datetime.now().date() - timedelta(days=2)
+    start_day = date - timedelta(days=3)
+    domains = concat_domains(medii)
+    top_articles_url = f"https://newsapi.org/v2/everything?domains={domains}&from={start_day}&to={date}&apiKey={api_key}"
+    #top_articles_url = f"https://newsapi.org/v2/everything?domains={domains}&from={start_day}&to={date}&page={1}&apiKey={api_key}"
+
     # create top heading articles
     top_articles = ArticleRequest(top_articles_url)
     # parse the articles
     top_articles_parsed = top_articles.parse_articles()
     return top_articles
 
-def get_articles_relevant(publisher=None):
-
-     # construct url for relavant data
-    medii = [
+medii = [
         "cnn.com",
         "cnbc.com",
         "cbsnews.com",
         "msnbc.com",
         "foxnews.com",
         "washingtonpost.com"
-    ]
+]
+
+def get_articles_relevant(publisher=None):
+
+     # construct url for relavant data
+    
     domains = concat_domains(medii)
     if publisher != None:
         medii.remove(publisher)
 
-    past_lookahead = 1 # how many days in history to search for the articles
+    past_lookahead = 2 # how many days in history to search for the articles
     relavant_url = relavant_urls(None, past_lookahead, domains, 1)
         
     # create relavant articles articles - get first page
@@ -179,7 +178,7 @@ def get_articles_relevant(publisher=None):
 
     # iterate through pages of articles and get all of them
     page_index = 1
-    while ((page_index - 1) * 100 < relavant_articles.get_number_of_articles()):
+    while ((page_index) * 100 < relavant_articles.get_number_of_articles()):
         print(page_index * 100, relavant_articles.get_number_of_articles())
         relavant_url = relavant_urls(None, past_lookahead, domains, page_index)
         relavant_articles.set_url(relavant_url)
@@ -187,6 +186,7 @@ def get_articles_relevant(publisher=None):
         page_index += 1
         if page_index * 100 > relavant_articles.get_number_of_articles():
             break
+        
     return relavant_articles.articles
 
 # example:
