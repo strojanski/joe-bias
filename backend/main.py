@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def get_daily(): 
-    return(get_articles_relevant())
+    return(get_articles_top().articles)
 
 @app.route("/by_link")
 def get_content_by_link():

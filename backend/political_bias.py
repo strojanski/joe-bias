@@ -26,7 +26,8 @@ class ArticleRequest:
 
     def get_articles(self):
         #print(requests.get(self.url).json())
-        return requests.get(self.url).json()["articles"]
+        res =  requests.get(self.url).json()
+        return res["articles"] if "articles" in res.keys() else []
 
     def set_url(self, url):
         self.url = url
@@ -170,11 +171,14 @@ def get_articles_relevant(publisher=None):
 
     # iterate through pages of articles and get all of them
     page_index = 1
-    #while (page_index) * 100 < relavant_articles.get_number_of_articles():
-    relavant_url = relavant_urls(None, past_lookahead, domains, page_index)
-    relavant_articles.set_url(relavant_url)
-    relavant_articles.parse_articles()
-    page_index += 1
+    while ((page_index - 1) * 100 < relavant_articles.get_number_of_articles()):
+        print(page_index * 100, relavant_articles.get_number_of_articles())
+        relavant_url = relavant_urls(None, past_lookahead, domains, page_index)
+        relavant_articles.set_url(relavant_url)
+        relavant_articles.parse_articles()
+        page_index += 1
+        if page_index * 100 > relavant_articles.get_number_of_articles():
+            break
     return relavant_articles.articles
 
 # example:

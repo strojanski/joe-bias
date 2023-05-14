@@ -84,6 +84,8 @@ class BindArticle:
         similarity = len(words1.intersection(words2)) / len(words1.union(words2))
         return similarity
 
+    #def word_frequency(self, article)
+
 
 if __name__ == "__main__": 
 
@@ -96,3 +98,4 @@ if __name__ == "__main__":
     res = ba.get_similar_articles()
 
     print(res)
+    print(res.keys())
