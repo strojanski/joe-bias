@@ -2,6 +2,7 @@ from political_bias import *
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from main.py import all_articles
 
 # TODO: dictionary with key = publisher, value = list of articles
 
@@ -14,18 +15,20 @@ medias = [
     "washingtonpost"
 ]
 
+res = get_articles_relevant() if all_articles == None else all_articles
 
 class BindArticle:
-    def __init__(self, article_title, article_desc: str):
+    def __init__(self, article_title, article_desc: str, article_author):
         self.article_title = article_title
         self.article_desc = article_desc
+        self.article_author = article_author
         
         
     def get_same_date_articles(self):
-        relevant = get_articles_relevant()
+        global res
+        relevant = res
         
         res = {}
-        foreign = ["espanol", "arabic"]
         
         for i in range(len(relevant)):
             if relevant[i]["media_id"] in medias and "espan" not in relevant[i]["url"] and "arabic" not in relevant[i]["url"]:
@@ -44,27 +47,31 @@ class BindArticle:
         
         # For each author 
         for author in self.article_dict.keys():
+            if author == self.article_author:
+                continue
             res[author] = []
             # Get closest articles
             closest = None
             max_similarity = 0
             
+            # For each article by an author check for the closest article
             for article in self.article_dict[author]:
                 article_title = preprocess_text(article["title"])
                 article_desc = preprocess_text(article["desc"])
+                
+                # Check cosine score in title
+                cosine = self.cosine_similarity(self.article_title + self.article_desc, article_title + article_desc)
+                jaccard = self.jaccard_similarity(self.article_title + self.article_desc, article_title + article_desc)
+                
+                avg = (cosine + jaccard) / 2
                 
                 # Title big weight
                 common_words = self.count_common_words(self.article_title, article_title)
                 score += common_words * .1
                 if common_words >= 2:
-                    print("common words: ", common_words, article_title, self.article_title)
+                    print("common words: ", common_words, article_title, "|", self.article_title)
                 
-                
-                # Check cosine score in title
-                cosine = self.cosine_similarity(self.article_title, article_title)
-                jaccard = self.jaccard_similarity(self.article_title, article_title)
-                
-                avg = (cosine + jaccard) / 2
+
                 score += avg
                 if score > max_similarity:
                     max_similarity = score
@@ -102,16 +109,28 @@ class BindArticle:
 
     #def word_frequency(self, article2):
         
+        
+def get_similar_articles(article):
+    article_description = preprocess_text(article["desc"])
+    article_title = preprocess_text(article["title"])
+    article_author = article["media_id"]
+    
+    ba = BindArticle(article_title, article_description, article_author)
+    ba.get_same_date_articles()
+    res = ba.get_similar_articles()
+    return res
 
 
 if __name__ == "__main__": 
-
-    article = get_articles_top().articles[0]
+    article = res[1]
+    while("espan" in article["url"] or "arabic" in article["url"]):
+        article = res[np.random.randint(0, len(res))]
     print(article)
     
     article_description = preprocess_text(article["desc"])
     article_title = preprocess_text(article["title"])
-    ba = BindArticle(article_title, article_description)
+    article_author = article["media_id"]
+    ba = BindArticle(article_title, article_description, article_author)
     ba.get_same_date_articles()
     res = ba.get_similar_articles()
 
