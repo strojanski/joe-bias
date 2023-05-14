@@ -1,2 +1,3 @@
 media_app/.angular
 media_app/node_modules
+__pycache__

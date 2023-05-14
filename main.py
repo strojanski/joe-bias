@@ -5,7 +5,7 @@ import json
 app = Flask(__name__)
 
 @app.route("/")
-def get_daily():
+def get_daily(): 
     return(political_bias.get_articles_relavant().articles)
 
 @app.route("/by_link")
