@@ -139,8 +139,16 @@ def get_article_content(article_url, article_media_name):
             return(" ".join(extract_content_from_html(content).split()))
 
 def get_articles_top():
+    domains = [
+        "cnn.com",
+        "cnbc.com",
+        "cbsnews.com",
+        "msnbc.com",
+        "foxnews.com",
+        "washingtonpost.com"
+    ]
     country = "us"
-    top_articles_url = f"https://newsapi.org/v2/top-headlines?country={country}&apiKey={api_key}"
+    top_articles_url = f"https://newsapi.org/v2/top-headlines?domains={domains}&country={country}&apiKey={api_key}"
     # create top heading articles
     top_articles = ArticleRequest(top_articles_url)
     # parse the articles
@@ -162,7 +170,7 @@ def get_articles_relevant(publisher=None):
     if publisher != None:
         medii.remove(publisher)
 
-    past_lookahead = 2 # how many days in history to search for the articles
+    past_lookahead = 1 # how many days in history to search for the articles
     relavant_url = relavant_urls(None, past_lookahead, domains, 1)
         
     # create relavant articles articles - get first page
