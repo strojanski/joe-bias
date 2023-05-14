@@ -3,6 +3,7 @@ from textblob import TextBlob
 from textblob.sentiments import NaiveBayesAnalyzer, PatternAnalyzer
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import wordnet 
+from political_bias import *
 
 
 url_embedded = "https://openai-api.meetings.bio/api/openai/embeddings"
