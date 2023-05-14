@@ -1,4 +1,3 @@
-#import openai
 import requests
 
 from nltk.tokenize import word_tokenize
@@ -14,37 +13,38 @@ from bs4 import BeautifulSoup
 
 api_key = "bb5dbc375d1540519dd0b79d4e55c272"
 
+
 class ArticleRequest:
     def __init__(self, url):
         self.url = url
         self.res = requests.get(url)
         self.article_urls = ""
         self.articles = []
-        
-    def get_number_of_articles (self):
+
+    def get_number_of_articles(self):
         return self.res.json()["totalResults"]
-    
-    def get_articles (self):
+
+    def get_articles(self):
         return requests.get(self.url).json()["articles"]
 
     def set_url(self, url):
         self.url = url
-    
-    
+
     def parse_articles(self):
         # list = []
         for article in self.get_articles():
             data = {}
-            data.update({'media_id' : article["source"]['id']})
-            data.update({'media_name' : article["source"]['name']})
-            data.update({'author' : article["author"]})
-            data.update({'title' : article["title"]})
-            data.update({'url' : article["url"]})
-            data.update({'date' : article["publishedAt"]})
-            data.update({'desc' : article["description"]})
+            data.update({'media_id': article["source"]['id']})
+            data.update({'media_name': article["source"]['name']})
+            data.update({'author': article["author"]})
+            data.update({'title': article["title"]})
+            data.update({'url': article["url"]})
+            data.update({'date': article["publishedAt"]})
+            data.update({'desc': article["description"]})
             self.articles.append(data)
             # list.append(data)
         return self.articles
+
 
 def preprocess_text(text):
     '''
@@ -62,7 +62,8 @@ def preprocess_text(text):
     lemmatized_tokens = [lemmatizer.lemmatize(token) for token in tokens]
     return lemmatized_tokens
 
-def concat_domains (domains):
+
+def concat_domains(domains):
     domains_string = ""
     index = 0
     for name in domains:
@@ -70,36 +71,81 @@ def concat_domains (domains):
             domains_string = domains_string + ","
         domains_string = domains_string + name
         index += 1
-        
+
     return domains_string
 
 
 # generate url based on time frame:
 # date - date of the original article
 # num_of_days - how long in the past it should look
-# medii - array of strings of media names it should check 
+# medii - array of strings of media names it should check
 def relavant_urls(date, num_of_days, domains, page):
     if (date == None):
         date = datetime.now().date()
     start_day = date - timedelta(days=num_of_days)
-    
+
     relavant = f"https://newsapi.org/v2/everything?domains={domains}&from={start_day}&to={date}&page={page}&apiKey={api_key}"
     return relavant
+
 
 def extract_content_from_html(html_string):
     soup = BeautifulSoup(html_string, 'html.parser')
     content = soup.get_text()
-    return content
+    return content   
 
-if __name__ == "__main__":
+def get_article_content(article_url, article_media_name):
+    # request for all the media sources
+        article_url_response = requests.get(article_url)
+
+        if (article_media_name == "The Washington Post"):
+            if article_url_response.ok:
+                soup = BeautifulSoup(article_url_response.text, "html.parser")
+                content = str(soup.find(class_="grid-body"))
+                print("The content is : " + " ".join(extract_content_from_html(content[content.find('drop-cap-letter') + 28:]).split()))
+
+        elif (article_media_name == "CNN"):
+            if article_url_response.ok:
+                soup = BeautifulSoup(article_url_response.text, "html.parser")
+                content = str(soup.find(class_="article__content"))
+                print("The content is : " + " ".join(extract_content_from_html(content).split()))
+
+        elif (article_media_name == "CBS News"):
+            if article_url_response.ok:
+                soup = BeautifulSoup(article_url_response.text, "html.parser")
+                content = str(soup.find(class_="content__body"))
+                print("The content is : " + " ".join(extract_content_from_html(content[:content.find('chartbeat') - 25]).split()))
+
+        # todo: check media_name on cnbs, msnbc, fox
+        elif (article_media_name == "CNBC"):
+            if article_url_response.ok:
+                soup = BeautifulSoup(article_url_response.text, "html.parser")
+                content = str(soup.find(class_="ArticleBody-articleBody"))
+                print("The content is : " + " ".join(extract_content_from_html(content[content.find('group') + 10:]).split()))
+
+        elif (article_media_name == "fox"):
+            if article_url_response.ok:
+                soup = BeautifulSoup(article_url_response.text, "html.parser")
+                content = str(soup.find(class_="article-body"))
+                print("The content is : " + " ".join(extract_content_from_html(content[content.find('speakable') + 11:]).split()))
+
+        elif (article_media_name == "MSNBC"):
+            if article_url_response.ok:
+                soup = BeautifulSoup(article_url_response.text, "html.parser")
+                content = str(soup.find(class_="showblog-body__content"))
+                print("The content is : " + " ".join(extract_content_from_html(content).split()))
+
+def get_articles_top():
     country = "us"
     top_articles_url = f"https://newsapi.org/v2/top-headlines?country={country}&apiKey={api_key}"
-    # create top heading articles 
+    # create top heading articles
     top_articles = ArticleRequest(top_articles_url)
     # parse the articles
     top_articles_parsed = top_articles.parse_articles()
-    
-    #construct url for relavant data
+    return top_articles
+
+def get_articles_relavant():
+
+     # construct url for relavant data
     medii = [
         "cnn.com",
         "cnbc.com",
@@ -110,60 +156,21 @@ if __name__ == "__main__":
     ]
     domains = concat_domains(medii)
 
-    relavant_url = relavant_urls(None, 1, domains, 1)
+    past_lookahead = 2 # how many days in history to search for the articles
+    relavant_url = relavant_urls(None, past_lookahead, domains, 1)
     # create relavant articles articles - get first page
     relavant_articles = ArticleRequest(relavant_url)
+    relavant_articles.parse_articles()
 
-    # iterate through pages of articles and get all of them 
+    # iterate through pages of articles and get all of them
     page_index = 0
     while (page_index) * 100 < relavant_articles.get_number_of_articles():
         page_index += 1
-        relavant_url = relavant_urls(None, 1, domains, page_index)
+        relavant_url = relavant_urls(None, past_lookahead, domains, page_index)
         relavant_articles.set_url(relavant_url)
         relavant_articles.parse_articles()
+    return relavant_articles
 
-    # request for all the media sources
-    for article in relavant_articles.articles:
-        print(article["url"])
-        if (article["media_name"] == "The Washington Post"):
-            article_response = requests.get(article["url"])
-            if article_response.ok:
-                soup = BeautifulSoup(article_response.text, "html.parser")
-                content = str(soup.find(class_="grid-body"))
-                print("The content is : " + " ".join(extract_content_from_html(content[content.find('drop-cap-letter') + 28:]).split()))
-
-        elif (article["media_name"] == "CNN"):
-            article_response = requests.get(article["url"])
-            if article_response.ok:
-                soup = BeautifulSoup(article_response.text, "html.parser")
-                content = str(soup.find(class_="article__content"))
-                print("The content is : " + " ".join(extract_content_from_html(content).split()))
-
-        elif (article["media_name"] == "CBS News"):
-            article_response = requests.get(article["url"])
-            if article_response.ok:
-                soup = BeautifulSoup(article_response.text, "html.parser")
-                content = str(soup.find(class_="content__body"))
-                print("The content is : " + " ".join(extract_content_from_html(content[:content.find('chartbeat') - 25]).split()))
-
-        # todo: check media_name on cnbs, msnbc, fox
-        elif (article["media_name"] == "CNBC"):
-            article_response = requests.get(article["url"])
-            if article_response.ok:
-                soup = BeautifulSoup(article_response.text, "html.parser")
-                content = str(soup.find(class_="ArticleBody-articleBody"))
-                print("The content is : " + " ".join(extract_content_from_html(content[content.find('group') + 10:]).split()))
-
-        elif (article["media_name"] == "fox"):
-            article_response = requests.get(article["url"])
-            if article_response.ok:
-                soup = BeautifulSoup(article_response.text, "html.parser")
-                content = str(soup.find(class_="article-body"))
-                print("The content is : " + " ".join(extract_content_from_html(content[content.find('speakable') + 11:]).split()))
-        elif (article["media_name"] == "MSNBC"):
-
-            article_response = requests.get(article["url"])
-            if article_response.ok:
-                soup = BeautifulSoup(article_response.text, "html.parser")
-                content = str(soup.find(class_="showblog-body__content"))
-                print("The content is : " + " ".join(extract_content_from_html(content).split()))
+# example:
+# print(get_articles_relavant().articles[50])
+# print(get_article_content(get_articles_relavant().articles[50]["url"], get_articles_relavant().articles[50]["media_name"]))
