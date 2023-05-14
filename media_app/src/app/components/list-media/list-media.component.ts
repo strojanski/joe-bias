@@ -8,10 +8,19 @@ import { ArticleDetailsComponent } from '../article-details/article-details.comp
   styleUrls: ['./list-media.component.scss']
 })
 export class ListMediaComponent implements OnInit {
+  public allArticles: any[] = [
+    {
+      name: "Test",
+      description: "Desc",
+      time: "ponoc",
+      publisher: "CNN"
+    }
+  ];
 
   constructor(public articles: ArticlesService) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    this.allArticles = await this.articles.getTitles()
   }
 
   public selectedArticle: any = null;
