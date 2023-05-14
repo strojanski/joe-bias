@@ -38,3 +38,28 @@ table {
 tr {
   border: 1px solid red; 
 }
+
+.news-example-card {
+  margin-bottom: 5px;
+  height: 200px;
+  width: 50%;
+}
+
+.column {
+  float: left;
+  width: 50%;
+  padding: 1%;
+}
+
+.row {
+  margin: 1%;
+}
+
+.example-card {
+  margin-bottom: 5px;
+  max-width: 400px;
+}
+
+.deck {
+  display: table-row;
+}

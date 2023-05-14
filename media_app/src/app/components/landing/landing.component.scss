@@ -16,7 +16,10 @@
     text-shadow: 2px 2px 0px #000;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-size: 70px;
+    font-size: 75px;
+    position: absolute;
+    left: 3rem;
+    top: 2rem;
 }
 
 .container {
@@ -60,8 +63,10 @@ button:hover {
 
 .slogan {
     font-size: 45px;
+    position: absolute;
+    left: 40wh;
+    top: 32vh;
     
-    margin-top: 12rem;
     color: navy;
     font-weight: 600;
 }
@@ -69,4 +74,3 @@ button:hover {
 body, .vsc-initialized {
     margin: 0px !important;
 }
-

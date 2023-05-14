@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { response } from 'express';
 import { Article } from '../Article';
 
 @Injectable({
@@ -38,23 +39,23 @@ export class ArticlesService {
   /**
     * Returns a list of Article objects representing the most trending articles
     */
-  // async getTitles() {
-  //   return fetch(`${this.API_URL}/`).then((response) => {
-  //     return response.json();
-  //   }
-  //   )
-  // }
   async getTitles() {
-    const response = await fetch(`${this.API_URL}/`);
-    const data = await response.json();
-    return data.titles;
+    return fetch(`${this.API_URL}/`).then((response) => {
+      return response.json();
+    })
   }
+  // async getTitles() {
+  //   const response = await fetch(`${this.API_URL}/`);
+  //   const data = await response.json();
+  //   console.log("Got data")
+  //   return data.titles;
+  // }
 
   /**
    * Returns an object representing the article content with the given title, also has content field
    */
-  async getArticleContent(publisher: string) {
-    const response = await fetch(`${this.API_URL}/similar/${publisher}`)
+  async getArticleContent(article: any) {
+    const response = await fetch(`${this.API_URL}/similar/${article}`)
     const data = await response.json();
     return data.titles;
   }
@@ -63,10 +64,14 @@ export class ArticlesService {
    * Returns bias of a given article
    */
   async getBias(title: string): Promise<any> {
-    return fetch(`${this.API_URL}/bias/${title}`).then((response) => {
-      return response.json();
-    });
+    const response = await fetch(`${this.API_URL}/bias/${title}`)
+    const data = await response.json();
+    return data.bias;
   }
 
-
+  async getSimilar(article: any): Promise<any> {
+    const response = await fetch(`${this.API_URL}/similar/${article}`)
+    const data = await response.json();
+    return data.data;
+  }
 }

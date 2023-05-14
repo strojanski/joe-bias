@@ -1,5 +1,7 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, jsonify
 from political_bias import *
+from bind_articles import *
+    
 import json
 from flask_cors import CORS
 from biasAssessment import *
@@ -13,6 +15,8 @@ medias = [
     "washingtonpost.com"
 ]
 
+all_articles = None
+
 
 app = Flask(__name__)
 CORS(app, origins='http://localhost:4200')
@@ -25,7 +29,14 @@ def get_bias_from_article(article):
 
 @app.route("/")
 def get_daily(): 
+<<<<<<< HEAD
+    print(get_articles_top().articles)
     return jsonify({"titles": get_articles_top().articles})
+=======
+    titles = get_articles_relevant()
+    all_articles = titles
+    return jsonify({"titles": titles})
+>>>>>>> refs/remotes/origin/master
 
 @app.route("/get_content/<article>")
 def get_content_by_link(article):
@@ -39,10 +50,10 @@ def get_content_by_link(article):
     #         return art[i]
 
 
-@app.route("/similar/<publisher>")
-def get_similar_articles(publisher):
+@app.route("/similar/<article>")
+def get_similar_articles(article):
 
-    return get_articles_relevant(publisher)
+    return jsonify({"data": get_similar_articles(article)})
 
     #return(political_bias.get_similar_articles("https://www.cnn.com/2023/05/12/business/airbag-inflator-recall-arc/index.html", "CNN"))
 
