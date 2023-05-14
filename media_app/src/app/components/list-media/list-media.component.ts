@@ -8,14 +8,8 @@ import { ArticleDetailsComponent } from '../article-details/article-details.comp
   styleUrls: ['./list-media.component.scss']
 })
 export class ListMediaComponent implements OnInit {
-  public allArticles: any[] = [
-    {
-      name: "Test",
-      description: "Desc",
-      time: "ponoc",
-      publisher: "CNN"
-    }
-  ];
+  public allArticles: any[] = [];
+  toDisplay: any = null
 
   constructor(public articles: ArticlesService) { }
 
@@ -27,6 +21,10 @@ export class ListMediaComponent implements OnInit {
 
   pickArticle(article: any) {
     this.selectedArticle = article 
+  }
+
+  displayDetails(article: any) {
+    this.toDisplay = article
   }
 
 }
