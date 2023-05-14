@@ -25,7 +25,7 @@ class ArticleRequest:
         return self.res.json()["totalResults"]
 
     def get_articles(self):
-        print(requests.get(self.url).json())
+        #print(requests.get(self.url).json())
         return requests.get(self.url).json()["articles"]
 
     def set_url(self, url):
@@ -61,7 +61,7 @@ def preprocess_text(text):
     # Lemmatize tokens
     lemmatizer = WordNetLemmatizer()
     lemmatized_tokens = [lemmatizer.lemmatize(token) for token in tokens]
-    return lemmatized_tokens
+    return " ".join(lemmatized_tokens)
 
 
 def concat_domains(domains):
@@ -98,7 +98,7 @@ def extract_content_from_html(html_string):
 def get_article_content(article_url, article_media_name):
     # request for all the media sources
     article_url_response = requests.get(article_url)
-    print(article_url_response)
+    #print(article_url_response)
 
     if (article_media_name == "The Washington Post"):
         if article_url_response.ok:
@@ -146,7 +146,7 @@ def get_articles_top():
     top_articles_parsed = top_articles.parse_articles()
     return top_articles
 
-def get_articles_relavant(publisher=None):
+def get_articles_relevant(publisher=None):
 
      # construct url for relavant data
     medii = [
@@ -163,9 +163,7 @@ def get_articles_relavant(publisher=None):
 
     past_lookahead = 2 # how many days in history to search for the articles
     relavant_url = relavant_urls(None, past_lookahead, domains, 1)
-    
-    print(relavant_url)
-    
+        
     # create relavant articles articles - get first page
     relavant_articles = ArticleRequest(relavant_url)
     relavant_articles.parse_articles()

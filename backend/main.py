@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def get_daily(): 
-    return(get_articles_relavant().articles)
+    return(get_articles_relevant())
 
 @app.route("/by_link")
 def get_content_by_link():
@@ -33,7 +33,7 @@ def get_content_by_link():
 @app.route("/similar/<publisher>")
 def get_similar_articles(publisher):
 
-    return get_articles_relavant(publisher)
+    return get_articles_relevant(publisher)
 
     #return(political_bias.get_similar_articles("https://www.cnn.com/2023/05/12/business/airbag-inflator-recall-arc/index.html", "CNN"))
 

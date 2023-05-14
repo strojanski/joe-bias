@@ -5,34 +5,58 @@ import numpy as np
 
 # TODO: dictionary with key = publisher, value = list of articles
 
+medias = [
+    "cnn",
+    "cnbc",
+    "cbsnews",
+    "msnbc",
+    "foxnews",
+    "washingtonpost"
+]
+
+
 class BindArticle:
     def __init__(self, article: str):
         self.article = article
         
+        
     def get_same_date_articles(self):
-        pass
+        relevant = get_articles_relevant()
+        
+        res = {}
+        foreign = ["espanol", "arabic"]
+        
+        for i in range(len(relevant)):
+            if relevant[i]["media_id"] in medias and "espanol" not in relevant[i]["url"] and "arabic" not in relevant[i]["url"]:
+                if relevant[i]["media_id"] not in res.keys():
+                    res[relevant[i]["media_id"]] = []
+                else:
+                    res[relevant[i]["media_id"]].append(relevant[i])
+                    
+        self.article_dict = res
         
         
-    def get_similar_articles(self, articles: dict):
+    def get_similar_articles(self):
         score = 0.0
         
         res = {}
         
         # For each author 
-        for author in articles.keys():
+        for author in self.article_dict.keys():
             res[author] = None
             # Get closest articles
             closest = None
-            min_dist = np.inf
+            max_similarity = 0
             
-            for article in articles[author]:
-                cosine = self.cosine_similarity(article)
-                jaccard = self.jaccard_similarity(article)
+            for article in self.article_dict[author]:
+                article_meaning = preprocess_text(article["title"] + article["desc"])
+                cosine = self.cosine_similarity(article_meaning)
+                jaccard = self.jaccard_similarity(article_meaning)
                 
                 avg = (cosine + jaccard) / 2
                 
-                if avg < min_dist:
-                    min_dist = avg
+                if avg > max_similarity:
+                    max_similarity = avg
                     closest = article
                 
             res[author] = closest
@@ -62,14 +86,13 @@ class BindArticle:
 
 
 if __name__ == "__main__": 
-    # Define two example texts
-    text1 = "This is the first text."
-    text2 = "This is the second text."
 
-    text1 = preprocess_text(text1)
-    text2 = preprocess_text(text2)
+    article = get_articles_top().articles[0]
+    print(article)
+    
+    article_description = preprocess_text(article["title"] + article["desc"])
+    ba = BindArticle(article_description)
+    ba.get_same_date_articles()
+    res = ba.get_similar_articles()
 
-
-    ba = BindArticle(text1)
-    similarity = ba.jaccard_similarity(text2)
-    print(similarity)
+    print(res)
