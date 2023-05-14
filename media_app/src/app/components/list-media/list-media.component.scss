@@ -1,0 +1,40 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+  }
+  
+  .list {
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  .details {
+    flex: 2;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  /* Styles for the list items */
+  .list-item {
+    cursor: pointer;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .list-item:hover {
+    background-color: #f0f0f0;
+  }
+
+
+  .list-item.active {
+    background-color: #e0e0e0;
+  }
+
+table {
+  border: 1px solid blue;
+}
+
+tr {
+  border: 1px solid red; 
+}
