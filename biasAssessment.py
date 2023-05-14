@@ -1,6 +1,9 @@
 from text_classification import *
 from textblob import TextBlob
 from textblob.sentiments import NaiveBayesAnalyzer, PatternAnalyzer
+from nltk.stem import WordNetLemmatizer
+from nltk.corpus import wordnet 
+
 
 url_embedded = "https://openai-api.meetings.bio/api/openai/embeddings"
 url_completion = "https://openai-api.meetings.bio/api/openai/chat/completions"
@@ -16,7 +19,7 @@ media = {"cnn.com": -1,
         "msnbc.com": -0.2,
         "foxbusiness.com": 1,
         "washingtonpost.com": 1}
-
+lemmatizer = WordNetLemmatizer()
 topics = open("topics.txt", "r").read()
 
 
@@ -40,10 +43,29 @@ class BiasAssesment:
 
         self.indexMax = (frequencyDemRepSumMax + sentimentSumMax + chatGPTSumMax + authorSumMax)*frequencyWeightMultiMax * susceptibilityMultiMax  # če bodo vrednosti Multi manjše kot 1 se ne pomnoži za računanje indexMax
 
-        self.article = preprocess_text(article)
+        self.article = article
         self.author = author
 
         self.gpt = GPT4(url_completion, token, model)
+
+    def expand_topic(self):
+        keys_list = topics.split("\n")
+        print(keys_list)
+        my_dict = {key: None for key in keys_list}
+        print(my_dict.keys())
+        for key in my_dict.keys():
+            print(key)
+            #dict_list = ([str(lemma.name()) for lemma in wordnet.synsets(key).hypernyms(key)])
+            synsets = wordnet.synsets(key)
+            #dict_list = [str(lemma.name()) for lemma in synsets]
+            synset = synsets[0]
+            hypernyms = synset.hypernyms()
+            dict_list = [str(lemma.name()) for synset in hypernyms for lemma in synset.lemmas()]
+            hyponyms = synset.hyponyms()
+            dict_list = [str(lemma.name()) for synset in hyponyms for lemma in synset.lemmas()]
+            my_dict[key] = dict_list
+        print(my_dict)
+        return keys_list
 
     def frequencyWeight(self):
         '''
@@ -52,9 +74,11 @@ class BiasAssesment:
         weightsMax1 = 1
         biased_freq = get_biased_words_frequency(self.article, bias_words)
         print(biased_freq*weightsMax1)
+        self.expand_topic()
         return(biased_freq*weightsMax1)
 
     def subjectivityMulti(self):
+        weightsMax = 1
         blob = TextBlob(self.article, analyzer=PatternAnalyzer())
         print(blob.sentiment.subjectivity)
         return blob.sentiment.subjectivity
